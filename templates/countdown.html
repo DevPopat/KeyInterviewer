@@ -15,7 +15,7 @@
   {% include 'header.html' %}
   <div style="height: 100vh" class="container d-flex justify-content-center align-content-center align-items-center">
       <div class="jumbotron my-auto bg-white">
-        <h1 id="mainHead" class="display-3">3</h1>
+        <h1 id="mainHead" class="" style="font-size: 50px">3</h1>
       </div>
   </div>
     {% include 'footer.html' %}
@@ -24,7 +24,11 @@
 <script>
   var timeleft = 3;
   var downloadTimer = setInterval(function(){
-    document.getElementById("mainHead").innerHTML = timeleft;
+    if (timeleft == 0) {
+      document.getElementById("mainHead").innerHTML = "GO!";
+    } else {
+      document.getElementById("mainHead").innerHTML = timeleft;
+    }
     timeleft = timeleft - 1;
   if(timeleft <= -1) {
     clearInterval(downloadTimer);
