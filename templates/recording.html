@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Hello!</title>
+  <meta name="description" content="Index-search">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <style type='text/css'>
+  @keyframes up-right {
+      0% {<!--from w w w .  j  a va 2  s. c  o m-->
+          transform: scale(1);
+          opacity: .25
+      }
+      50% {
+          transform: scale (1, 5);
+          opacity: 1;
+      }
+      100% {
+          transform: scale(1);
+          opacity: .25;
+      }
+  }
+  .circle {
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      opacity: .25;
+  }
+  .red {
+      background-color: red;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-animation: up-right 1s infinite;
+      -moz-animation: up-right 1s infinite;
+      -o-animation: up-right 1s infinite;
+      animation: up-right 1s infinite;
+  }
+  </style>
+</head>
+
+<body>
+  {% include 'header.html' %}
+  <div class="circle red"></div>
+  <div style="font-size: 30px;">
+    <h1 style="top: 70%; left: 45%; position: absolute;">Duration: </h1>
+    <h1 id="hello" style="top: 70%; left: 55%; position: absolute;"><time>00:00:00</time></h1>
+  </div>
+    {% include 'footer.html' %}
+</body>
+<script>
+  $.get( "/recordingStart", function( data ) {
+    window.location.href = "/analysis";
+  });
+  var h1 = document.getElementById('hello'),
+  start = document.getElementById('start'),
+  stop = document.getElementById('stop'),
+  clear = document.getElementById('clear'),
+  seconds = 0, minutes = 0, hours = 0,
+  t;
+
+  function finishPage() {
+    window.location.href = "/recording";
+  }
+
+function add() {
+  seconds++;
+  if (seconds >= 60) {
+      seconds = 0;
+      minutes++;
+      if (minutes >= 60) {
+          minutes = 0;
+          hours++;
+      }
+  }
+
+  h1.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
+
+  timer();
+}
+function timer() {
+  t = setTimeout(add, 1000);
+}
+timer();
+
+
+/* Start button */
+start.onclick = timer;
+
+/* Stop button */
+stop.onclick = function() {
+  clearTimeout(t);
+}
+
+/* Clear button */
+clear.onclick = function() {
+  h1.textContent = "00:00:00";
+  seconds = 0; minutes = 0; hours = 0;
+}
+
+
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+</html>
