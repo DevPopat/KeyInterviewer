@@ -12,6 +12,7 @@ import subprocess
 import os
 import shutil
 import stat
+import io
 
 app =Flask(__name__)
 
@@ -212,10 +213,16 @@ def stop_AVrecording(filename):
         cmd = "ffmpeg -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video2.mp4 -pix_fmt yuv420p "+ str(local_path) + "/static/" + filename + ".mp4"
         subprocess.call(cmd, shell=True)
 
+        cmd = "ffmpeg -i temp_audio.wav -ac 1 temp_mono.wav"
+        subprocess.call(cmd, shell=True)
+
     else:
         local_path = os.getcwd()
         print ("Normal recording\nMuxing")
         cmd = "ffmpeg -ac 2 -channel_layout stereo -i temp_audio.wav -i temp_video.mp4 -pix_fmt yuv420p " + str(local_path) +"/static/" + filename + ".mp4"
+        subprocess.call(cmd, shell=True)
+
+        cmd = "ffmpeg -i temp_audio.wav -ac 1 temp_mono.wav"
         subprocess.call(cmd, shell=True)
 
         print ("..")
@@ -240,6 +247,9 @@ def file_manager(filename):
 
     if os.path.exists(str(local_path) + "/temp_audio.wav"):
         os.remove(str(local_path) + "/temp_audio.wav")
+
+    if os.path.exists(str(local_path) + "/temp_mono.wav"):
+        os.remove(str(local_path) + "/temp_mono.wav")
 
     if os.path.exists(str(local_path) + "/temp_video.mp4"):
         os.remove(str(local_path) + "/temp_video.mp4")
@@ -276,8 +286,32 @@ def final():
             (analysis[0]['faceAttributes']['emotion'])
         except:
             pass
+        # Imports the Google Cloud client library
+    from google.cloud import speech
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
 
-    return render_template("finished.html")
+    # Instantiates a client
+    client = speech.SpeechClient()
+    file_name = "temp_mono.wav"
+    # Loads the audio into memory
+    with io.open(file_name, 'rb') as audio_file:
+        content = audio_file.read()
+        audio = types.RecognitionAudio(content=content)
+
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=44100,
+        language_code='en-US')
+
+    # Detects speech in the audio file
+    response = client.recognize(config, audio)
+    #print(response)
+    x = ""
+    for result in response.results:
+        x = ('Transcript: {}'.format(result.alternatives[0].transcript))
+
+    return render_template("finished.html", paragraph=x)
 
 @app.route('/first')
 def first():
