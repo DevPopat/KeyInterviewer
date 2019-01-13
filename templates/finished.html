@@ -10,6 +10,7 @@
   <script src="https://code.highcharts.com/modules/series-label.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <style>
 
 </style>
@@ -19,14 +20,18 @@
   {% include 'header.html' %}
   <div class="container-fluid">
     <div class="row">
-      <div class="col-5 mt-5">
-        <p style="font-size: 25px; word-wrap: break-word" class="mt-3">
-          {{paragraph}}</p>
+      <div class="col-5 mt-5 justify-content-center">
+        <div class="form-inline col-12">
+          <p id="scoreKeep" class="mt-5 mr-5 pt-2"></p>
+          <div class="d-flex justify-content-center align-items-center align-content-center"><a href="/first" class="btn btn-secondary btn-lg mt-5 ml-5">Practice again!</a></div>
+        </div>
+        <h3 class="mt-2">What you said during your interview...</h3>
+        <p id="sentences" style="font-size: 25px; word-wrap: break-word" class="mt-3"></p>
       </div>
       <div class="col-6">
         <div class="d-flex justify-content-center mt-5">
-          <video style="max-height: 40vh;" class="mt-3" controls>
-              <source src="static/Default_user.mp4" type="video/mp4">
+          <video style="max-height: 40vh; width: 100%;" class="mt-3" controls>
+              <source src="static\Default_user.mp4" type="video/mp4">
               <source src="movie.ogg" type="video/ogg">
               Your browser does not support the video tag.
           </video>
@@ -41,62 +46,69 @@
 </body>
 <script>
 
+  $.getJSON( "/getThat", function( data ) {
+    document.getElementById("sentences").innerHTML = data[0]
+    document.getElementById("scoreKeep").innerHTML = "Your score was " + "<strong style='font-size: 20px'>" + data[1] + "</strong>" + " of "+"<strong style='font-size: 20px'>"+ "10"+"</strong>"
+  });
 
-Highcharts.chart('container', {
-    chart: {
-        type: 'column'
-    },
-    title: {
-        text: 'Stacked column chart'
-    },
-    xAxis: {
-        categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'Total fruit consumption'
+  $.getJSON( "/getArrays", function( data ) {
+    chartMe(data)
+  });
+
+  function chartMe(data) {
+    Highcharts.chart('container', {
+        chart: {
+            type: 'column'
         },
-        stackLabels: {
-            enabled: true,
-            style: {
-                fontWeight: 'bold',
-                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-            }
-        }
-    },
-    legend: {
-        align: 'right',
-        x: -30,
-        verticalAlign: 'top',
-        y: 25,
-        floating: true,
-        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-        borderColor: '#CCC',
-        borderWidth: 1,
-        shadow: false
-    },
-    tooltip: {
-        headerFormat: '<b>{point.x}</b><br/>',
-        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-    },
-    plotOptions: {
-        column: {
-            stacking: 'normal',
-            dataLabels: {
+        title: {
+            text: 'Stacked column chart'
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Total fruit consumption'
+            },
+            stackLabels: {
                 enabled: true,
-                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
             }
-        }
-    },
-    series: [{
-        name: 'John',
-        data: [5, 3, 4, 7, 2]
-    }, {
-        name: 'Hey',
-        data: [2, 5, 6, 1, 2]
-    }]
-});
+        },
+        legend: {
+            align: 'right',
+            x: -30,
+            verticalAlign: 'top',
+            y: 25,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                }
+            }
+        },
+        series: [{
+            name: 'Negative',
+            data: data[0]
+        }, {
+            name: 'Positive',
+            data: data[1]
+        }]
+    });
+  }
 
 </script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

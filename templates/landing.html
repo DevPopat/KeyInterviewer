@@ -7,9 +7,70 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
 <style>
-  .btn-xlarge {
+.jumbotron-heading{
+  animation-name: moveInTop;
+  animation-duration: 3s;
+  animation-timing-function: ease-out;
+}
+
+.containerB{
+  animation-name: moveInBot;
+  animation-duration: 3s;
+  animation-timing-function: ease-out;
+}
+
+@keyframes moveInTop{
+  0%{
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+
+  100%{
+    opacity:1;
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes moveInBot{
+  0%{
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100%{
+    opacity:1;
+    transform: translateX(0);
+  }
+}
+
+.btn:link,
+.btn:visited{
+  text-decoration: none;
+  padding: 20px 28px;
+  display: inline-block;
+  -webkit-border-radius: 12px;
+  -mov-border-radius: 12px;
+  border-radius:12px;
+  transition: all .3s;
+  position: relative;
+}
+
+a:hover{
+  transform: translateY(-2px);
+  box-shadow: 0px 10px 20px rgba(0,0,0,.4);
+
+}
+
+a:active{
+  transform: scaleX(1.1) scaleY(1.2);
+  box-shadow: 0 10px 20px rgba(0,0,0,.4);
+}
+
+
+/*  .btn-xsmall {
     padding: 18px 28px;
-    font-size: 22px; //change this to your desired size
+    font-size: 30px; //change this to your desired size
     line-height: normal;
     -webkit-border-radius: 8px;
        -moz-border-radius: 8px;
@@ -22,6 +83,7 @@ a:hover{
 strong:hover {
   color: white;
 }
+*/
 </style>
 </head>
 
@@ -32,16 +94,20 @@ strong:hover {
 
       <section class="jumbotron border-bottom text-center d-flex justify-content-center align-items-center align-content-center mt-4 pb-4">
         <div class="container">
-          <h1 class="jumbotron-heading">Interview Helper</h1>
+
+          <h1 class="jumbotron-heading">key<strong>Interviewer</strong></h1>
         </div>
       </section>
     </main>
 
-    <div class="container justify-content-center d-flex">
-      <strong><a style="color: black" class="btn btn-secondary btn-xlarge m-2 mt-4" href="/first"><strong>Online Interviews</strong></a></strong>
-      <a style="color: black" class="btn btn-secondary btn-xlarge m-2 mt-4" href="/first"><strong>Writing Interviews</strong></a>
-      <a style="color: black" style="border: 2px solid white" class="btn btn-secondary border-white btn-xlarge m-2 mt-4" href="/first"><strong>Phone Interviews</</strong></a>
+  <div class="container justify-content-center d-flex">
+      <div class="containerB">
+      <a style="color: black" class="btn btn-secondary btn-xlarge m-2 mt-4" href="/first"><strong>Online Interviews</strong></a>
+      <a style="color: black" class="btn btn-secondary btn-xlarge m-2 mt-4" href="/writing"><strong>Writing Interviews</strong></a>
+      <a style="color: black" class="btn btn-secondary btn-xlarge m-2 mt-4" href="#"><strong>Phone Interviews</strong></a>
     </div>
+    <img class="col-12 d-flex justify-content-end fixed-bottom" style="width: 40vw; height: 50vh; margin-left: 63vh; bottom:10vh;" src="static/phresher.png"/>
+  </div>
 
     {% include 'footer.html' %}
 </body>

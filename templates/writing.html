@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Hello!</title>
+  <meta name="description" content="Index-search">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
+<style>
+.btn-xlarge {
+  padding: 18px 28px;
+  font-size: 22px; //change this to your desired size
+  line-height: normal;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+}
+</style>
+</head>
+
+<body>
+  {% include 'header.html' %}
+
+  <div class="d-flex justify-content-center align-items-center align-content-center mt-5">
+    <h2 class="mt-5">What have you done to be part of the wider community?</h2>
+  </div>
+  <div class="d-flex justify-content-center align-items-center align-content-center mt-3">
+    <form class="mt-5 col-8" action="/essayScore" method="GET">
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Write your response here...</label>
+        <textarea name="essay" class="form-control" id="exampleFormControlTextarea1" rows="14"></textarea>
+      </div>
+      <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-secondary">Grade my essay!</button>
+      </div>
+    </form>
+  </div>
+    {% include 'footer.html' %}
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+</html>

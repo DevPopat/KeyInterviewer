@@ -16,6 +16,66 @@ import io
 
 app =Flask(__name__)
 
+question_counter = []
+#showsreading from a text file
+
+good_words = ["communication", "communicated", "leadership", "leading", "lead", "excited","exciting", "excite", "motivated","motivate", "motivating", "learn", "learning", "learned","team", "teamwork","team player",
+              "inspired","responsiblity","responsible", "energize", "energizing", "energized", "enthusiastic", "enthusiatically", "efficient", "efficiently", "organized", "organizing", "organize", "initiative",
+              "initiating", "initiated", "initiating", "initiate", "negotiated", "negotiate", "negotiating", "resolve", "resolving", "reslved", "plan", "planned", "planning", "accomplished", "accomplishing",
+              "accomplish", "prioritized", "prioritize", "prioriztizing", "hard work", "hard working", "proactive", "proactively", "diversity", "diversify", "empowering", "empower", "empowered", "grow", "grew",
+              "streamlined", "streamline", "streamlining", "leverage", "leveraging", "leveraged", "robust", "alignment", "aligning", "aligned", "align", "reached out", "reaching out", "reach out",
+              "growth", "reimagine", "reimagined", "reimagining", "accountable", "accountability", "invest", "invested", "investing", "guide", "guiding", "guided", "differentiate", "differentiated", "differeniating",
+              "schedule", "scheduling", "scheduled", "engagement", "engaging", "engage", "engaged", "bandwidth", "mission", "mission critical", "cooperation", "cooperating", "cooperated",
+              "cooperate", "listen", "listening", "listened", "creative", "visibility", "transparent", "transparency", "agile", "innovating", "innovation", "innovated", "innovate", "scalability", "scalable",
+              "manage", "managed", "managing", "machine learning", "blockchain", "robotics", "networked", "networking", "network", "stakeholder", "cross platform", "inspire", "inspired", "inspiring", "grit",
+              "metacognition", "thoughtful", "throughput", "curate", "curating", "curated", "automated", "automation", "automate", "AI", "impact", "impactful", "disrupt", "disrupting",
+              "communicate", "communicating", "communication", "communicated", "passion", "passionate", "pivot", "pain points", "quality", "repurpose", "repurposed", "repurposing", "purpose",
+              "visual", "visualizing", "visualized", "personlization", "VR", "visual reality", "artificial intelligence", "AR", "augmented reality", "XR", "OLED", "haptics", "redesigned", "redesign", "redesigning",
+              "design", "designing", "designed", "rethink", "intuitive", "intuition", "responsive", "engineer", "engineered", "engineering", "problem solving", "active", "actively", "secure", "augment",
+              "augmenting", "augmented", "supportive", "support", "supporting", "supported", "enhance", "enhancing", "enhanced", "enhansive", "immerse", "immersive", "immersing", "immersed",
+              "connection", "connecting", "connect", "overcome", "overcame", "overcoming", "comprehensive", "comprehensively", "interactive", "achieve", "achieving", "achieved", "achievement", "cinematic","adapt","urgent","interested","mission","vision"]
+bad_words = ["ummm", "um", "uh", "oh", "huh", "like", "liked", "liking", "so", "I don't", "don't", "do not", "I can't", "can't", "nervous","sorry", "bad", "hated", "hating", "hate", "disgust", "disgusting", "incompetent", "less competent", "sick",
+             "bro", "actually", "just", "vacation", "pay", "shit", "shithead", "garbage", "fuck", "fucked", "fucking", "bitch", "ass", "asshole", "not good", "I don't know", "fine", "terrible", "awful", "fag",
+             "faggot", "damn", "dammit", "damning","jerk", "jerkoff", "butthole", "angry", "lazy", "crazy", "craziness", "dull", "sluggish", "passive", "passive aggressive", "passively", "coast", "coasting", "coasted",
+             "irresponsible", "irresponsibly", "irresponsibility", "ignorant", "ignorantly", "racist", "bigot", "sexist", "homophobic", "transphobic", "divorce", "careless", "care-free", "chill", "kush", "420", "dank", "dope",
+             "drunk", "bong", "blunt", "vape", "vaping", "vaped", "OG","oops", "oopsy", "oopsie", "millennial", "synergy", "synergize", "synergizing", "synergized", "lack", "lacking", "lacked", "maybe","I think","money", "income","crap","bothered","incapable","stuff"]
+
+class QuestionCounter():
+    def __init__(self):
+        self.question = 1;
+        self.lastProcessed = ""
+        self.recentScore = 0
+        self.goodArray = []
+        self.badArray = []
+
+    def update(self, x):
+        self.lastProcessed = x
+
+    def getIt(self):
+        return self.lastProcessed;
+
+    def incrementQuestion(self):
+        self.question = self.question + 1;
+        if (self.question == 11):
+            self.question = 1
+
+    def getQuestion(self):
+        return self.question;
+
+    def updateScore(self, x):
+        self.recentScore = x;
+
+    def getScore(self):
+        return self.recentScore;
+
+    def getArrs(self):
+        return [self.badArray, self.goodArray]
+
+    def updateArrs(self, x, y):
+        self.goodArray = x
+        self.badArray = y
+
+
 
 class VideoRecorder():
     # Video class based on openCV
@@ -266,11 +326,12 @@ def live():
 
 @app.route('/final')
 def final():
+    pointsPos = 0
     files = (os.listdir("D:\SplicedJPEGS"))
     subscription_key = "deedc4397f034fe8b4c97f872ba7b745"
     assert subscription_key
     emotion_recognition_url = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect'
-
+    myArray = []
     for x in files:
         image_data = open("D:\SplicedJPEGS\\" + x, "rb").read()
         params = {
@@ -283,10 +344,16 @@ def final():
         response.raise_for_status()
         analysis = response.json()
         try:
-            (analysis[0]['faceAttributes']['emotion'])
+            emotions = (analysis[0]['faceAttributes']['emotion'])
+            if not(emotions['happiness'] < 0.8 or emotions['neutral'] > 0.8 or emotions['sadness'] > 0.5):
+                pointsPos = pointsPos + 1
+                myArray.append(1)
+            else:
+                myArray.append(0)
         except:
             pass
         # Imports the Google Cloud client library
+    firstScore = (5 / len(files)) * pointsPos
     from google.cloud import speech
     from google.cloud.speech import enums
     from google.cloud.speech import types
@@ -304,18 +371,53 @@ def final():
         sample_rate_hertz=44100,
         language_code='en-US')
 
+    posPts = 0
+    negPts = 0
     # Detects speech in the audio file
     response = client.recognize(config, audio)
     #print(response)
     x = ""
     for result in response.results:
         x = ('Transcript: {}'.format(result.alternatives[0].transcript))
+        question_counter.update(x)
+    x = x.split()
+    for i in x:
+        if i in good_words:
+            posPts = posPts + 1
+        elif i in bad_words:
+            negPts = negPts + 1
 
-    return render_template("finished.html", paragraph=x)
+    otherScore = 0
+    try:
+        otherScore = (posPts / (posPts + negPts)) * 5
+    except:
+        otherScore = 0
+
+
+    question_counter.updateScore(otherScore + firstScore)
+    #question_counter.update("One of the reasons I consider myself a suitable candidate for this role is my willingness for continually developing myself.")
+
+    badArray = []
+    goodArray = []
+    while(len(myArray)>4):
+        x = myArray[0:4]
+        f = sum(x)
+        badArray.append(4-f)
+        goodArray.append(f)
+        myArray = myArray[4:]
+    m = len(myArray)
+    k = sum(myArray)
+    goodArray.append(k)
+    badArray.append(m-k)
+    question_counter.updateArrs(goodArray, badArray)
+    return render_template("finished.html")
 
 @app.route('/first')
 def first():
-    return render_template("initial_vid.html")
+    number = question_counter.getQuestion()
+    question="static/Question" + str(number) +".mp4"
+    question_counter.incrementQuestion()
+    return render_template("initial_vid.html", question=question)
 
 @app.route('/finished')
 def finished():
@@ -333,9 +435,39 @@ def recording():
 def analysis():
     return render_template("analysis.html")
 
+@app.route('/getThat')
+def getThat():
+    return jsonify([question_counter.getIt(), question_counter.getScore()])
+
+@app.route('/writing')
+def writing():
+    return render_template("writing.html")
+
+@app.route('/getArrays')
+def arrayget():
+    return jsonify(question_counter.getArrs())
+
+@app.route('/essayScore')
+def essayScore():
+    e = request.args['essay']
+    e = e.split()
+    posPts = 0
+    negPts = 0
+    for i in e:
+        if i in good_words:
+            posPts = posPts + 1
+        elif i in bad_words:
+            negPts = negPts + 1
+    otherScore = 0
+    try:
+        otherScore = (posPts / (posPts + negPts)) * 5
+    except:
+        otherScore = 0
+
+    return render_template("essayScoring.html", score=otherScore)
+
 @app.route('/recordingStart')
 def recordingStart():
-
     filename = "Default_user"
     file_manager(filename)
     start_AVrecording(filename)
@@ -347,4 +479,5 @@ def recordingStart():
 
 if __name__ == '__main__':
     app.debug = True
+    question_counter = QuestionCounter()
     app.run(host = '0.0.0.0',port=5000)
