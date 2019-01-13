@@ -379,7 +379,7 @@ def final():
     x = ""
     for result in response.results:
         x = ('Transcript: {}'.format(result.alternatives[0].transcript))
-        question_counter.update(x)
+        question_counter.update(x.lower())
     x = x.split()
     for i in x:
         if i in good_words:
@@ -417,7 +417,8 @@ def first():
     number = question_counter.getQuestion()
     question="static/Question" + str(number) +".mp4"
     question_counter.incrementQuestion()
-    return render_template("initial_vid.html", question=question)
+    useQ = "static/Question3A.mp4"
+    return render_template("initial_vid.html", question=useQ)
 
 @app.route('/finished')
 def finished():
@@ -437,7 +438,23 @@ def analysis():
 
 @app.route('/getThat')
 def getThat():
-    return jsonify([question_counter.getIt(), question_counter.getScore()])
+    x = question_counter.getIt()
+    print(x)
+    x = x.split()
+    print(x)
+    for index, k in enumerate(x):
+        if k.lower() in good_words:
+            m = "<span style='color: green'>" + k + "</span>"
+            k=k.replace(k, m)
+            x[index] = k
+        elif k.lower() in bad_words:
+            j = "<span style='color: red'>" + k + "</span>"
+            k.replace(k, j)
+            k=k.replace(k, j)
+            x[index] = k
+    x = " ".join(x)
+    print(x)
+    return jsonify([x, question_counter.getScore()])
 
 @app.route('/writing')
 def writing():

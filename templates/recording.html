@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Hello!</title>
+  <title>keyPotential.org</title>
   <meta name="description" content="Index-search">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
@@ -83,22 +83,9 @@ function add() {
 function timer() {
   t = setTimeout(add, 1000);
 }
-timer();
 
+setTimeout(function(){ timer(); }, 3000);
 
-/* Start button */
-start.onclick = timer;
-
-/* Stop button */
-stop.onclick = function() {
-  clearTimeout(t);
-}
-
-/* Clear button */
-clear.onclick = function() {
-  h1.textContent = "00:00:00";
-  seconds = 0; minutes = 0; hours = 0;
-}
 
 
 </script>

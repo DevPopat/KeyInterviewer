@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Hello!</title>
+  <title>keyPotential.org</title>
   <meta name="description" content="Index-search">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
@@ -14,10 +14,32 @@
 }
 
 .containerB{
+
   animation-name: moveInBot;
   animation-duration: 3s;
   animation-timing-function: ease-out;
 }
+.logo{
+    opacity: 0;
+    -webkit-animation-delay: 2.5s;
+  -webkit-animation-name: fadein;
+  -webkit-animation-duration: 3s; 
+  -webkit-animation-timing-function: ease-out;
+  animation-name: fadein; 
+  animation-duration: 3s;
+  animation-timing-function: ease-out;
+  -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
+  -moz-animation-fill-mode: forwards;    /* FF 5+ */
+  -o-animation-fill-mode: forwards;      /* Not implemented yet */
+  -ms-animation-fill-mode: forwards;     /* IE 10+ */
+  animation-fill-mode: forwards;         /* When the spec is finished */
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
 
 @keyframes moveInTop{
   0%{
@@ -37,6 +59,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
 
   100%{
     opacity:1;
@@ -106,8 +129,11 @@ strong:hover {
       <a style="color: black" class="btn btn-secondary btn-xlarge m-2 mt-4" href="/writing"><strong>Writing Interviews</strong></a>
       <a style="color: black" class="btn btn-secondary btn-xlarge m-2 mt-4" href="#"><strong>Phone Interviews</strong></a>
     </div>
+    <div class="logo">
     <img class="col-12 d-flex justify-content-end fixed-bottom" style="width: 40vw; height: 50vh; margin-left: 63vh; bottom:10vh;" src="static/phresher.png"/>
   </div>
+  </div>
+</div>
 
     {% include 'footer.html' %}
 </body>
